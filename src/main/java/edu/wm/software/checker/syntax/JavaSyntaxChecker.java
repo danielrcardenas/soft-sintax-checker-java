@@ -1,5 +1,6 @@
-package edu.wm.software.syntax.checker;
+package edu.wm.software.checker.syntax;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Formatter;
@@ -13,17 +14,23 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
+import edu.wm.software.checker.util.CSV2ClassFileConverter;
+import edu.wm.software.checker.util.ResourceLoader;
+
 public class JavaSyntaxChecker {
     public static void main(String[] args) {
-        System.out.println(JavaSyntaxChecker.check("/path/to/HelloBuggyWorld.java"));
+        CSV2ClassFileConverter.createClassFiles("lstm_java_samples.csv");
+        for (File file : ResourceLoader.getFilesOnResourcePath()) {
+            System.out.println(JavaSyntaxChecker.check(file));
+        }
     }
     
-    public static List<String> check(String file) {
+    public static List<String> check(File file) {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         
         StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
         Iterable<? extends JavaFileObject> compilationUnits =
-                fileManager.getJavaFileObjectsFromStrings(Arrays.asList(file));
+                fileManager.getJavaFileObjectsFromFiles(Arrays.asList(file));
         
         DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
         compiler.getTask(null, fileManager, diagnostics, null, null, compilationUnits).call();
