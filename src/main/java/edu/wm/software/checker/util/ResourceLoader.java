@@ -17,7 +17,7 @@ public class ResourceLoader {
     
     private static String absolutePath = null;
     
-    private static final String RELATIVE_PATH = "src/main/resources/";
+    private static final String RELATIVE_PATH = "java/resources/";
     
     private static ResourceLoader instance = new ResourceLoader();
     

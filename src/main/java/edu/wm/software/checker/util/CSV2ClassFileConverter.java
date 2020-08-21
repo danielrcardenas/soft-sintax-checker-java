@@ -9,9 +9,9 @@ import java.io.IOException;
 
 public class CSV2ClassFileConverter {
     
-    public static final String DATASET = "dataset";
+    public static final String DATASET = "compiled";
     
-    private static  final String CLASS_TEMPLATE = "public class Test { <code> } "; //TODO DRC: this shpuld be replaces by a template
+    private static  final String CLASS_TEMPLATE = "public class Test { <code> } "; //TODO DRC: this should be replaces by a template
     public static void createClassFiles(String csvFile) {
         String absolutePath = ResourceLoader.getAbsolutePath();
         try {
@@ -39,7 +39,7 @@ public class CSV2ClassFileConverter {
     
     protected static void createClassFile(String code, String className){
     
-        try (FileWriter classWriter = new FileWriter(ResourceLoader.getAbsolutePath() + DATASET+ File.separator + className + ".java")) {
+        try (FileWriter classWriter = new FileWriter(ResourceLoader.getAbsolutePath() + DATASET+ File.separator + className + ".java", false)) {
             classWriter.append(code);
             classWriter.flush();
         }
