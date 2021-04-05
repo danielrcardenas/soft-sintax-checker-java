@@ -1,4 +1,6 @@
 .idea/
 *.iml
-java/resources/*
+/java/resources/
 out/
+/src/main/resources/dataset/
+.DS_Store

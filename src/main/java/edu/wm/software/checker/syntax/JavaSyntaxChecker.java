@@ -3,7 +3,6 @@ package edu.wm.software.checker.syntax;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,20 +39,29 @@ public class JavaSyntaxChecker {
                 fileManager.getJavaFileObjectsFromFiles(Arrays.asList(file));
         
         DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
-        compiler.getTask(null, fileManager, diagnostics, null, null, compilationUnits).call();
-        
         List<String> messages = new ArrayList<>();
         String id = file.getName().split("\\.")[0].replace("Test", "");
-        
-        for (Diagnostic diagnostic : diagnostics.getDiagnostics()) {
-            String result = String.join("\t", id, diagnostic.getKind().name(),
-                    String.valueOf(diagnostic.getLineNumber()),
-                    String.valueOf(diagnostic.getPosition()),
-                    diagnostic.getMessage(Locale.ROOT));
+        try {
+            compiler.getTask(null, fileManager, diagnostics, null, null, compilationUnits).call();
             
+            for (Diagnostic diagnostic : diagnostics.getDiagnostics()) {
+                String result = String
+                        .join("\t", id, diagnostic.getKind().name(), String.valueOf(diagnostic.getLineNumber()), String.valueOf(diagnostic.getPosition()),
+                                cleanMessage(diagnostic.getMessage(Locale.ROOT)));
+        
+                messages.add(result);
+            }
+        } catch (java.lang.IllegalArgumentException e) {
+            String result = String
+                    .join("\t", id, "NOT COMPILE", "", "", "IllegalArgumentException");
+    
             messages.add(result);
         }
         
         return messages;
+    }
+    
+    protected static String cleanMessage(String message) {
+        return message.replace("\n", " ");
     }
 }
